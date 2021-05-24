@@ -1,7 +1,5 @@
 package com.example.demo.layer2;
-
-
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.*;
 
@@ -23,7 +21,8 @@ public class Cancelticket  {
 	private int cancelid;
 	
 	//@Temporal(TemporalType.TIMESTAMP)
-	private Date canceldate;
+	@Column(name="canceldate",columnDefinition="Date")
+	private LocalDate canceldate=LocalDate.now();
 	
 	private Double refundamount;
 
@@ -40,22 +39,13 @@ public class Cancelticket  {
 		System.out.println("CancelTicket contr()......");
 	}
 
-	public Date getCanceldate() {
+	public LocalDate getCanceldate() {
 		return canceldate;
 	}
 
-	public void setCanceldate(Date canceldate) {
-		this.canceldate = canceldate;
+	public void setCanceldate(LocalDate date) {
+		this.canceldate = date;
 	}
-	/*
-	 	public Date getEmployeeHiredate() {
-		return employeeHiredate;
-	}
-
-	public void setEmployeeHiredate(Date employeeHiredate) {
-		this.employeeHiredate = employeeHiredate;
-	
-	 */
 
 	public int getCancelid() {
 		return this.cancelid;
@@ -89,4 +79,5 @@ public class Cancelticket  {
 		this.reservation = reservation;
 	}
 
+	
 }

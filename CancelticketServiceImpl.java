@@ -1,15 +1,13 @@
 package com.example.demo.layer4;
 
 import java.util.Set;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.layer2.Cancelticket;
 import com.example.demo.layer3.CancelticketRepository;
-import com.example.demo.layer4.exceptions.TicketNumberAlreadyExistsException;
-import com.example.demo.layer4.exceptions.TicketNumberNotFoundException;
+import com.example.demo.layer4.exceptions.CancelIdAlreadyExistsException;
+import com.example.demo.layer4.exceptions.CancelIdNotFoundException;
 
 @Service
 public class CancelticketServiceImpl implements CancelticketService {
@@ -18,28 +16,30 @@ public class CancelticketServiceImpl implements CancelticketService {
 	CancelticketRepository canTktRepo;
 
 	@Override
-	public void addCancelticketService(Cancelticket ctRef)throws TicketNumberAlreadyExistsException {
+	public String addCancelticketService(Cancelticket ctRef)throws CancelIdAlreadyExistsException {
 		try
 		{
 		canTktRepo.addCancelticket(ctRef);
 		
 	}
 		 catch (Exception e) {
-				// TODO Auto-generated catch block
-				throw new TicketNumberAlreadyExistsException("CancelId already exists");
+				e.printStackTrace();
+				throw e;
 				
 			}
+		System.out.println("Cancelticket added successfully");
+		return "Cancelticket added successfully";
 	}
 
 	@Override
-	public Cancelticket findCancelticketService(int cancelid) throws TicketNumberNotFoundException {
+	public Cancelticket findCancelticketService(int cancelid) throws CancelIdNotFoundException {
 		try
 		{
 			return canTktRepo.findCancelticket(cancelid);
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new TicketNumberNotFoundException("Cancelticket not found");
+			throw new CancelIdNotFoundException("Cancelticket not found");
 		}
 	
 	
@@ -54,7 +54,7 @@ public class CancelticketServiceImpl implements CancelticketService {
 
 
 	@Override
-	public void modifyCancelticketService(Cancelticket ctRef)throws TicketNumberNotFoundException {
+	public String modifyCancelticketService(Cancelticket ctRef)throws CancelIdNotFoundException {
 		Cancelticket ctRef1=canTktRepo.findCancelticket(ctRef.getCancelid());
 		if(ctRef1!=null)
 		{
@@ -62,13 +62,15 @@ public class CancelticketServiceImpl implements CancelticketService {
 		}
 		else
 		{
-			throw new TicketNumberNotFoundException("CancelId  not found");
+			throw new CancelIdNotFoundException("CancelId  not found");
 		}
+		System.out.println("Cancelticket modified successfully");
+		return "Cancelticket modified successfully";
 		
 	}
 
 	@Override
-	public void removeCancelticketService(int cancelid)throws TicketNumberNotFoundException {
+	public String removeCancelticketService(int cancelid)throws CancelIdNotFoundException {
 		Cancelticket ctRef1=canTktRepo.findCancelticket(cancelid);
 		if(ctRef1!=null)
 		{
@@ -76,10 +78,13 @@ public class CancelticketServiceImpl implements CancelticketService {
 		}
 		else
 		{
-			throw new TicketNumberNotFoundException("CancelId  not found");
+			throw new CancelIdNotFoundException("CancelId  not found");
 		}
+		return "deleted successfully";
 		
 	}
+
+
 
 
 }

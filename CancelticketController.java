@@ -2,6 +2,7 @@ package com.example.demo.layer5;
 
 import java.util.Set;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.layer2.Cancelticket;
 import com.example.demo.layer4.CancelticketService;
-import com.example.demo.layer4.exceptions.TicketNumberAlreadyExistsException;
-import com.example.demo.layer4.exceptions.TicketNumberNotFoundException;
+import com.example.demo.layer4.exceptions.CancelIdAlreadyExistsException;
+import com.example.demo.layer4.exceptions.CancelIdNotFoundException;
 
 @RestController
 public class CancelticketController {
@@ -28,7 +29,7 @@ public class CancelticketController {
 	
 	@GetMapping(path="/getCanTkt/{mycancelid}")
 	@ResponseBody
-	public ResponseEntity<Cancelticket> getCancelticket(@PathVariable("mycancelid") Integer cancelid) throws TicketNumberNotFoundException {
+	public ResponseEntity<Cancelticket> getCancelticket(@PathVariable("mycancelid") Integer cancelid) throws CancelIdNotFoundException {
 		System.out.println("Cancelticket Controller.......");
 		Cancelticket canTkt=null;
 		
@@ -53,12 +54,13 @@ public class CancelticketController {
 		
 	}
 	
-	@PostMapping(path="/addCanTkt")  //not working
-	public String addCancelticket(@RequestBody Cancelticket canTkt)throws TicketNumberAlreadyExistsException
+	@PostMapping(path="/addCanTkt")			//not working
+	public String addCancelticket(@RequestBody Cancelticket canTkt)throws CancelIdAlreadyExistsException
 	{
 		System.out.println("Cancelticket Controller....Understanding client and talking to service layer...");
-		Cancelticket ctObj=new Cancelticket();
 		
+		Cancelticket ctObj=new Cancelticket();
+		ctObj.setCancelid(canTkt.getCancelid());
 		ctObj.setCanceldate(canTkt.getCanceldate());
 		ctObj.setRefundamount(canTkt.getRefundamount());
 		ctObj.setRefundstatus(canTkt.getRefundstatus());
@@ -68,7 +70,7 @@ public class CancelticketController {
 		try {
 			stmsg = canTktServ.addCancelticketService(ctObj);
 			} 
-		catch (TicketNumberAlreadyExistsException e) {
+		catch (CancelIdAlreadyExistsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return e.getMessage();
@@ -83,13 +85,13 @@ public class CancelticketController {
 		}
 	
 	@PutMapping(path="/modifyCanTKt") // not working
-	public String modifyDepartment(@RequestBody Cancelticket canTkt )throws TicketNumberNotFoundException {
+	public String modifyCancelticket(@RequestBody Cancelticket canTkt )throws CancelIdNotFoundException {
 		System.out.println("Ticket Controller....Understanding client and talking to service layer...");
 		 String stmsg = null;
 		try {
 			stmsg = canTktServ.modifyCancelticketService(canTkt);
 		} 
-		catch (TicketNumberNotFoundException e) {
+		catch (CancelIdNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return e.getMessage();
@@ -103,17 +105,17 @@ public class CancelticketController {
 	}
 	
 	@DeleteMapping(path="/deleteCanTkt") // not working
-	public String removeDepartment(@RequestBody Cancelticket canTkt)throws TicketNumberNotFoundException {
+	public void removeCancelticket(@RequestBody Cancelticket canTkt)throws CancelIdNotFoundException {
 		System.out.println("Cancelticket Controller....Understanding client and talking to service layer...");
 		 String stmsg = null;
 		try {
-			stmsg = canTktServ.removeDepartmentService(canTkt.getCancelid());
+		stmsg = canTktServ.removeCancelticketService(canTkt.getCancelid());
 		} 
 		catch(Exception e) {
 			e.printStackTrace();
-		}
+	}
 		System.out.println("controller is saying: "+stmsg);
-		  return stmsg;	
+		  return;	
 }
 }
 
